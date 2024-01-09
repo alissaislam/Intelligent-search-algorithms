@@ -25,32 +25,25 @@ public class UserMode {
     }
 
     void play(){
-
-
         initBoard.print ();
-
-
         Scanner input = new Scanner(System.in);
         Board newBoard = initBoard;
 
         while (true) {
-
             if (Actions.isWin (newBoard.getPlayer1 ())){
                 System.out.println ("Player 1 you WIN!!!");
-                return;
+                break;
             }
             if (Actions.isWin (newBoard.getPlayer2 ())){
                 System.out.println ("Player 2 you WIN!!!");
-                return;
+                break;
             }
-
             System.out.println ("Player 1 turn");
             System.out.println ("Throw The Seashells");
-           // input.next ();
+           // القاء الودعات -الرمية
             Movement movement = Actions.getMovement ();
-
+            //return list of movements that include at least one khal
             ArrayList<Movement> movementArrayList = Actions.firstTurn (movement,newBoard.getPlayer1 (),new ArrayList<> ());
-
             if (movementArrayList.isEmpty ()) {
                 System.out.println ("you can't play");
                 break;
@@ -64,7 +57,7 @@ public class UserMode {
                     steps.add (movement1.getSteps ());
                 }
                 countOfKhal = Collections.frequency (steps,1 );
-
+                //for each khal  make decision : add pawn, move one step
                 for ( int i =0 ; i < countOfKhal ; i++ ){
                     System.out.println ("What to do with the khal");
                     System.out.println ("1 add or 2 play ");

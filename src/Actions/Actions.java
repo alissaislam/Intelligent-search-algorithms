@@ -178,7 +178,6 @@ public class Actions {
 
     public static  void killing(Board board,Pawn pawn){
         Player enemy ;
-
         //if the current player is the 1 player
         if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
             enemy = board.getPlayer2 ();
@@ -186,7 +185,7 @@ public class Actions {
         else
             enemy = board.getPlayer1 ();
 
-        if(!shera.contains(pawn.getPosition()) && !shera.contains(pawn.getPosition())){
+        if(!pawn.getPlayer().getSafe().contains(pawn.getPosition())){
              for (Pawn pawn1 : enemy.getPawnInBoard()) {
                  if(pawn.getPosition() == pawn1.getPosition()){
                      enemy.getPawnInBoard().remove(pawn1);

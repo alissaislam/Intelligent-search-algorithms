@@ -13,6 +13,9 @@ public class Node {
         this.movement = movement;
     }
 
+    public Node() {
+    }
+
     public Node getParent() {
         return parent;
     }
@@ -43,5 +46,9 @@ public class Node {
 
     public void setMovement(Movement movement) {
         this.movement = movement;
+    }
+
+    public int calcEva(){
+        return 0;
     }
 }

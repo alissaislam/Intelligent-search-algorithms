@@ -6,14 +6,30 @@ import Models.Movement;
 import Models.Pawn;
 import Models.Player;
 import Modes.UserMode;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import Probability.TreeSimulation;
+import  Probability.ProbabilityNode;
 
 public class Main {
 
+    public static void main(String[] args) {
+        Movement rootMovement = new Movement(0,false,false,1);
+
+        ProbabilityNode root = new ProbabilityNode(null, 1.0, rootMovement);
+        TreeSimulation treeSimulation = new TreeSimulation();
+        treeSimulation.generateTree(root, 1);
+
+        List< TreeSimulation.PathWithProbability> paths = treeSimulation.iteratePaths(root);
+
+        // Print results with probabilities
+        for (TreeSimulation.PathWithProbability path : paths) {
+            path.printPath();
+        }
+        System.out.println(paths.size());
+    }
 
     static Movement dest = new Movement (10,true,true);
     static Movement beng = new Movement (24,true,true);
@@ -25,22 +41,6 @@ public class Main {
     static Movement khal = new Movement (1,false,false);
 
     static ArrayList<Movement> movementArrayList = new ArrayList<> (Arrays.asList (dest,beng,shake,bara,doaq,three,four));
-    public static void main(String[] args) {
-        // safe zone
-        //75->81
-        //0->7
-//for (Movement movement : myTern ()){
-//    System.out.println (movement.getSteps ());
-    new UserMode ();
-//        Player player =new Player (new ArrayList<> (),1);
-//        Player player1 = Actions.playerDeepCopy (player);
-//
-//        player.getPawnInBoard ().add (new Pawn (1,player));
-//        player1.getPawnInBoard ().add (new Pawn (2,player1));
-//
-//        System.out.println (player.getPawnInBoard ().get (0).getPosition ());
-//        System.out.println (player1.getPawnInBoard ().get (0).getPosition ());
-}
 
     private static ArrayList<Movement> myTernHelper(int count,ArrayList<Movement> ternList){
         if (count==10)

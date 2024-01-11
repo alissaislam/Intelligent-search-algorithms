@@ -1,7 +1,7 @@
 package Actions;
 
-import Helper.Helper;
 import Models.*;
+import Probability.ProbabilityNode;
 
 import java.util.*;
 
@@ -75,30 +75,35 @@ public class Actions {
     }
 
     public static ArrayList<Movement> myTern(){
+
         return myTernHelper (1,new ArrayList<> ());
     }
 
    //  move  the pawn
     public static Board move(Movement movement ,Pawn pawn ,Board board){
+        List<Pawn> pawns = new ArrayList<>();
         Board newBoard = boardDeepCopy (board);
         for (Pawn newPawn : newBoard.getPlayerById (pawn.getPlayer ().getPlayerNumber ()).getPawnInBoard ()){
             if (newPawn.getPosition ()==pawn.getPosition ()) {
-                newPawn.setPosition (newPawn.getPosition () + movement.getSteps ());
-                killing(board,pawn);
+                pawns.add(newPawn);
+                killing(newBoard,newPawn, movement);
             }
+                pawns.get(0).setPosition ( pawns.get(0).getPosition () + movement.getSteps ());
+
         }
         return newBoard;
     }
 
     //generate next Node fot the algo
-    public static ArrayList<Node> getNextStates(Node node, Player player){
-        ArrayList<Node> nextStates = new ArrayList<> ();
-
+    public static ArrayList<ProbabilityNode> getNextStates(ProbabilityNode node, Player player){
+        ArrayList<ProbabilityNode> nextStates = new ArrayList<> ();
+        //[10,12,25]
         for (Movement movement : Movement.movementArrayList) {
             ArrayList<Pawn> possiblePawns = getPossiblePawns (node.getBoard (),movement, player);
+            //[1,2]
             for (Pawn pawn : possiblePawns){
                 Board newBoard = move (movement,pawn,node.getBoard ());
-                Node newNode = new Node (node,newBoard,node.getDepth ()+1,movement);
+                ProbabilityNode newNode = new ProbabilityNode(node,newBoard,node.getDepth ()+1,movement);
                 nextStates.add (newNode);
             }
         }
@@ -138,6 +143,9 @@ public class Actions {
         //no khal, but can playQAgain
         else if (movement.isPlayAgain ()){
             //اعادة الرمية مرة واحدة
+
+
+
             Movement movement1 = getMovement ();
             //اضافة الرمية الجديدة لمصفوات الرميات
             movementArrayList.add (movement1);
@@ -175,9 +183,9 @@ public class Actions {
         return newBoard;
     }
 
-
-    public static  void killing(Board board,Pawn pawn){
+    public static  void killing(Board board,Pawn pawn,Movement movement){
         Player enemy ;
+        int newPossition;
         //if the current player is the 1 player
         if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
             enemy = board.getPlayer2 ();
@@ -187,7 +195,8 @@ public class Actions {
 
         if(!pawn.getPlayer().getSafe().contains(pawn.getPosition())){
              for (Pawn pawn1 : enemy.getPawnInBoard()) {
-                 if(pawn.getPosition() == pawn1.getPosition()){
+                newPossition = pawn.getPosition () + movement.getSteps ();
+                 if(Math.abs( newPossition - pawn1.getPosition() )== 34){
                      enemy.getPawnInBoard().remove(pawn1);
                      System.out.println("You Killed a pawn to your enemy");
                  }

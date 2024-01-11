@@ -1,21 +1,22 @@
 package Actions;
 
 import Models.*;
-import Probability.ProbabilityNode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Actions {
-  static   List<Integer> shera = new ArrayList<> (Arrays.asList (10,21,27,38,44,55,61,72));
-    //return false if you can't but pawn on shera because the enemy is on it
-    public static boolean setOnShera(Pawn pawn,Movement movement,Board board){
+    static   List<Integer> shera = new ArrayList<> (Arrays.asList (10,21,27,38,44,55,61,72));
+    static List<Integer> safe = new ArrayList<> (Arrays.asList (0,1,2,3,4,5,6,82,81,80,79,78,77,76,75,10,21,27,38,44,55,61,72));
+
+    public static boolean setOnShera(Pawn pawn,int movement,Board board){
         Player playerEnemy ;
-        //next index
-        int index =pawn.getPosition ()+movement.getSteps();
-        //if the current player is the 1 player
+        int index =pawn.getPosition ()+movement;
+
         if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
             playerEnemy = board.getPlayer2 ();
-            //if the current player is the 2 player
         else
             playerEnemy = board.getPlayer1 ();
 
@@ -23,41 +24,37 @@ public class Actions {
             if (pawn1.getPosition ()==index)
                 return false;
         }
+
         return true;
     }
 
-    //can move (movement steps more than possible step, if can stand on shera?, )
-    public static boolean checkMove(Board board,Movement movement, Pawn pawn){
-        //الحركات الباقية للوصول للنهاية لضمان عدم الخرج من الرقعة
-        if (83 - pawn.getPosition ()< movement.getSteps ())
+    public static boolean checkMove(Board board,int steps, Pawn pawn){
+
+        if (83 - pawn.getPosition ()< steps)
             return false;
-        //موقع الحجر الناتج عن الحركة
-        int index = pawn.getPosition ()+movement.getSteps ();
+        int index = pawn.getPosition ()+steps;
         if (shera.contains (index)) {
-            if (!setOnShera (pawn, movement, board))
+            if (!setOnShera (pawn, steps, board))
                 return false;
         }
         return true;
     }
 
-    //return list of the  pawn that can move
-    public static ArrayList<Pawn> getPossiblePawns (Board board,Movement movement,Player player){
+    public static ArrayList<Pawn> getPossiblePawns (Board board,int steps,Player player){
         ArrayList<Pawn> possiblePawns = new ArrayList<> ();
         for (Pawn pawn : player.getPawnInBoard ()){
-            if (checkMove (board,movement,pawn))
+            if (checkMove (board,steps,pawn))
                 possiblePawns.add (pawn);
         }
         return possiblePawns;
     }
 
-    //random move
     public static Movement getMovement(){
         Random random =new Random ();
         int index = random.nextInt (7);
         return Movement.movementArrayList.get (index);
     }
 
-    //allow the player to  play 10 time and store it in list
     private static ArrayList<Movement> myTernHelper(int count,ArrayList<Movement> ternList){
         if (count==10)
             return ternList;
@@ -75,42 +72,40 @@ public class Actions {
     }
 
     public static ArrayList<Movement> myTern(){
-
         return myTernHelper (1,new ArrayList<> ());
     }
 
-   //  move  the pawn
-    public static Board move(Movement movement ,Pawn pawn ,Board board){
-        List<Pawn> pawns = new ArrayList<>();
+
+    public static Board move(int steps ,Pawn pawn ,Board board){
+
         Board newBoard = boardDeepCopy (board);
+        ArrayList <Pawn> pawns = new ArrayList<> ();
         for (Pawn newPawn : newBoard.getPlayerById (pawn.getPlayer ().getPlayerNumber ()).getPawnInBoard ()){
             if (newPawn.getPosition ()==pawn.getPosition ()) {
-                pawns.add(newPawn);
-                killing(newBoard,newPawn, movement);
+                pawns.add (newPawn);
+                killing (board,newPawn,steps);
             }
-                pawns.get(0).setPosition ( pawns.get(0).getPosition () + movement.getSteps ());
-
         }
+        pawns.get (0).setPosition (pawns.get (0).getPosition ()+steps);
         return newBoard;
     }
 
-    //generate next Node fot the algo
-    public static ArrayList<ProbabilityNode> getNextStates(ProbabilityNode node, Player player){
-        ArrayList<ProbabilityNode> nextStates = new ArrayList<> ();
-        //[10,12,25]
+
+    public static ArrayList<Node> getNextStates(Node node, Player player){
+
+        ArrayList<Node> nextStates = new ArrayList<> ();
+
         for (Movement movement : Movement.movementArrayList) {
-            ArrayList<Pawn> possiblePawns = getPossiblePawns (node.getBoard (),movement, player);
-            //[1,2]
+            ArrayList<Pawn> possiblePawns = getPossiblePawns (node.getBoard (),movement.getSteps (), player);
             for (Pawn pawn : possiblePawns){
-                Board newBoard = move (movement,pawn,node.getBoard ());
-                ProbabilityNode newNode = new ProbabilityNode(node,newBoard,node.getDepth ()+1,movement);
+                Board newBoard = move (movement.getSteps (),pawn,node.getBoard ());
+                Node newNode = new Node (node,newBoard,node.getDepth ()+1,movement);
                 nextStates.add (newNode);
             }
         }
         return nextStates;
     }
 
-    // all pawn on board + all pawn in the end
     public static boolean isWin(Player player){
         if (player.getPawnInBoard ().size ()==4) {
             for (Pawn pawn : player.getPawnInBoard ()) {
@@ -119,9 +114,9 @@ public class Actions {
             }
             return true;
         }
-            return false;
+        return false;
     }
-    //check if can play in the start turn : there is no pawn on the board , the movement include khal
+
     public static boolean start(Movement movement,Player player){
         if(player.getPawnInBoard ().size ()==0){
             if(movement.isKhal ())
@@ -129,31 +124,20 @@ public class Actions {
         }
         return false;
     }
-    //search for khal,
     public static ArrayList<Movement> firstTurn(Movement movement, Player player,ArrayList<Movement> movementArrayList){
         if (start (movement,player)){
-            //الرميات الجديدةا
-             movementArrayList = Actions.myTern ();
-             // الرمية الحالية من تابع  play
-             movementArrayList.add (movement);
-             //خال لان الرمية الاصلية تحتوي على خال
-             movementArrayList.add (Movement.khall);
-             return movementArrayList;
+            movementArrayList = Actions.myTern ();
+            movementArrayList.add (movement);
+            movementArrayList.add (Movement.khall);
+            return movementArrayList;
         }
-        //no khal, but can playQAgain
         else if (movement.isPlayAgain ()){
-            //اعادة الرمية مرة واحدة
-
-
-
             Movement movement1 = getMovement ();
-            //اضافة الرمية الجديدة لمصفوات الرميات
             movementArrayList.add (movement1);
-            //اعادة استدعاء للبحث عن خال
             return firstTurn (movement1,player,movementArrayList);
         }
-        // لا يمكن للتابع ان يلعب اذا لم يظهر له خال وبالتالي يعيد مصفوفة حركات فارغة
-            return new ArrayList<> ();
+
+        return new ArrayList<> ();
     }
 
     public static Pawn pawnDeepCopy(Pawn pawn){
@@ -183,9 +167,10 @@ public class Actions {
         return newBoard;
     }
 
-    public static  void killing(Board board,Pawn pawn,Movement movement){
+    public static  void killing(Board board,Pawn pawn,int steps){
         Player enemy ;
-        int newPossition;
+        int newPostion;
+        Pawn deadPawn = new Pawn (-1,new Player ());
         //if the current player is the 1 player
         if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
             enemy = board.getPlayer2 ();
@@ -193,14 +178,16 @@ public class Actions {
         else
             enemy = board.getPlayer1 ();
 
-        if(!pawn.getPlayer().getSafe().contains(pawn.getPosition())){
-             for (Pawn pawn1 : enemy.getPawnInBoard()) {
-                newPossition = pawn.getPosition () + movement.getSteps ();
-                 if(Math.abs( newPossition - pawn1.getPosition() )== 34){
-                     enemy.getPawnInBoard().remove(pawn1);
-                     System.out.println("You Killed a pawn to your enemy");
-                 }
-             }
+        if(!safe.contains(pawn.getPosition())){
+            for (Pawn pawn1 : enemy.getPawnInBoard()) {
+                newPostion = pawn.getPosition () + steps;
+                if(Math.abs( newPostion - pawn1.getPosition() ) == 34){
+                    deadPawn = pawn1;
+                    System.out.println("You Killed a pawn to your enemy");
+                }
+            }
+            if (deadPawn.getPosition ()!=-1)
+                enemy.getPawnInBoard ().remove (deadPawn);
         }
     }
 

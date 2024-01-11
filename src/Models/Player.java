@@ -10,15 +10,8 @@ public class Player {
 
     int playerNumber;
 
-    public List<Integer> getSafe() {
-        return safe;
+    public Player() {
     }
-
-    public void setSafe(List<Integer> safe) {
-        this.safe = safe;
-    }
-
-    List<Integer> safe = new ArrayList<> (Arrays.asList (0,1,2,3,4,5,6,82,81,80,79,78,77,76,10,21,27,38,44,55,61,72));
 
     public Player(int playerNumber) {
 
@@ -26,7 +19,7 @@ public class Player {
     }
 
     public Player( List<Pawn> pawnInBoard,int playerNumber ) {
-       // this.arrayList = arrayList;
+        // this.arrayList = arrayList;
         this.pawnInBoard = pawnInBoard;
         this.playerNumber = playerNumber;
     }

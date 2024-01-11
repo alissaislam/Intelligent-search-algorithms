@@ -16,19 +16,21 @@ import  Probability.ProbabilityNode;
 public class Main {
 
     public static void main(String[] args) {
-        Movement rootMovement = new Movement(0,false,false,1);
-
-        ProbabilityNode root = new ProbabilityNode(null, 1.0, rootMovement);
-        TreeSimulation treeSimulation = new TreeSimulation();
-        treeSimulation.generateTree(root, 1);
-
-        List< TreeSimulation.PathWithProbability> paths = treeSimulation.iteratePaths(root);
-
-        // Print results with probabilities
-        for (TreeSimulation.PathWithProbability path : paths) {
-            path.printPath();
-        }
-        System.out.println(paths.size());
+        ////////////////////////////////////////////////////////////////////////printing Probability////////////////////////////
+        new UserMode ();
+//        Movement rootMovement = new Movement(0,false,false,1);
+//
+//        ProbabilityNode root = new ProbabilityNode(null, 1.0, rootMovement);
+//        TreeSimulation treeSimulation = new TreeSimulation();
+//        treeSimulation.generateTree(root, 1);
+//
+//        List< TreeSimulation.PathWithProbability> paths = treeSimulation.iteratePaths(root);
+//
+//        // Print results with probabilities
+//        for (TreeSimulation.PathWithProbability path : paths) {
+//            path.printPath();
+//        }
+//        System.out.println(paths.size());
     }
 
     static Movement dest = new Movement (10,true,true);

@@ -10,7 +10,8 @@ public class Player {
 
     int playerNumber;
 
-    List<Integer> safe = new ArrayList<> (Arrays.asList (0,1,2,3,4,5,6,82,81,80,79,78,77,76,10,21,27,38,44,55,61,72));
+    public Player() {
+    }
 
     public Player(int playerNumber) {
 

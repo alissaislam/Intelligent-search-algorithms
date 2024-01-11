@@ -16,7 +16,7 @@ public class Movement {
   public static Movement four = new Movement (4,false,false);
   public static Movement khall = new Movement (1,false,false);
 
-    public static ArrayList<Movement> movementArrayList = new ArrayList<> (Arrays.asList (dest,beng,shake,bara,doaq,three,four));
+    public static ArrayList<Movement> movementArrayList = new ArrayList<> ( Arrays.asList (dest,beng,shake,bara,doaq,three,four) );
 
 
     public Movement(int steps, boolean khal, boolean playAgain) {

@@ -30,9 +30,9 @@ public class Actions {
 
     public static boolean checkMove(Board board,int steps, Pawn pawn){
 
-        if (83 - pawn.getPosition ()< movement.getSteps ())
+        if (83 - pawn.getPosition ()< steps)
                 return false;
-        int index = pawn.getPosition ()+movement.getSteps ();
+        int index = pawn.getPosition ()+steps;
         if (shera.contains (index)) {
             if (!setOnShera (pawn, steps, board))
                 return false;

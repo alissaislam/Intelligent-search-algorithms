@@ -7,6 +7,7 @@ public class Movement {
     int steps;
     boolean khal;
     boolean playAgain;
+    double probability;
   public static Movement dest = new Movement (10,true,true);
   public static Movement beng = new Movement (25,true,true);
   public static Movement shake = new Movement (6,false,true);
@@ -16,13 +17,21 @@ public class Movement {
   public static Movement four = new Movement (4,false,false);
   public static Movement khall = new Movement (1,false,false);
 
-    public static ArrayList<Movement> movementArrayList = new ArrayList<> ( Arrays.asList (dest,beng,shake,bara,doaq,three,four) );
+  public static ArrayList<Movement> movementArrayList = new ArrayList<> ( Arrays.asList (dest,beng,shake,bara,doaq,three,four) );
 
 
     public Movement(int steps, boolean khal, boolean playAgain) {
         this.steps = steps;
         this.khal = khal;
         this.playAgain = playAgain;
+    }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(double probability) {
+        this.probability = probability;
     }
 
     public int getSteps() {

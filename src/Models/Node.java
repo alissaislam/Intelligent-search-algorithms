@@ -6,6 +6,8 @@ public class Node {
     int depth;
     Movement movement;
 
+    double expectedValue;
+
     public Node(Node parent, Board board, int depth, Movement movement) {
         this.parent = parent;
         this.board = board;
@@ -14,6 +16,14 @@ public class Node {
     }
 
     public Node() {
+    }
+
+    public double getExpectedValue() {
+        return expectedValue;
+    }
+
+    public void setExpectedValue(double expectedValue) {
+        this.expectedValue = expectedValue;
     }
 
     public Node getParent() {

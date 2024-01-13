@@ -15,30 +15,30 @@ public class Actions {
         Player playerEnemy ;
         int index =pawn.getPosition ()+movement;
 
-            if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
-                playerEnemy = board.getPlayer2 ();
-            else
-                playerEnemy = board.getPlayer1 ();
+        if (pawn.getPlayer ().getPlayerNumber () == board.getPlayer1 ().getPlayerNumber ())
+            playerEnemy = board.getPlayer2 ();
+        else
+            playerEnemy = board.getPlayer1 ();
 
-            for (Pawn pawn1 : playerEnemy.getPawnInBoard ()){
-                if (pawn1.getPosition ()==index)
-                    return false;
-            }
+        for (Pawn pawn1 : playerEnemy.getPawnInBoard ()){
+            if (pawn1.getPosition ()==index)
+                return false;
+        }
 
-            return true;
+        return true;
     }
 
     public static boolean checkMove(Board board,int steps, Pawn pawn){
 
-        if (83 - pawn.getPosition ()< steps)
+        if (83 - pawn.getPosition ()< movement.getSteps ())
                 return false;
-        int index = pawn.getPosition ()+steps;
+        int index = pawn.getPosition ()+movement.getSteps ();
         if (shera.contains (index)) {
             if (!setOnShera (pawn, steps, board))
                 return false;
         }
-       return true;
-        }
+        return true;
+    }
 
     public static ArrayList<Pawn> getPossiblePawns (Board board,int steps,Player player){
         ArrayList<Pawn> possiblePawns = new ArrayList<> ();
@@ -126,10 +126,10 @@ public class Actions {
     }
     public static ArrayList<Movement> firstTurn(Movement movement, Player player,ArrayList<Movement> movementArrayList){
         if (start (movement,player)){
-             movementArrayList = Actions.myTern ();
-             movementArrayList.add (movement);
-             movementArrayList.add (Movement.khall);
-             return movementArrayList;
+            movementArrayList = Actions.myTern ();
+            movementArrayList.add (movement);
+            movementArrayList.add (Movement.khall);
+            return movementArrayList;
         }
         else if (movement.isPlayAgain ()){
             Movement movement1 = getMovement ();
@@ -190,5 +190,7 @@ public class Actions {
             enemy.getPawnInBoard ().remove (deadPawn);
         }
     }
+
+}
 
 }

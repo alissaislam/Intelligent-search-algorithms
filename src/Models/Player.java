@@ -19,7 +19,7 @@ public class Player {
     }
 
     public Player( List<Pawn> pawnInBoard,int playerNumber ) {
-       // this.arrayList = arrayList;
+        // this.arrayList = arrayList;
         this.pawnInBoard = pawnInBoard;
         this.playerNumber = playerNumber;
     }

@@ -2,7 +2,9 @@ package Models;
 
 public class Pawn {
     int position;
+
     Player player;
+
 
     public Pawn(int position, Player player) {
         this.position = position;
